@@ -12,7 +12,7 @@ export default function Login(){
         const data = { nisn, password }
 
         try {
-            const response = await fetch("../api/siswa", {
+            const response = await fetch("/api/siswa", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
