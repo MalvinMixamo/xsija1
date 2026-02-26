@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
     try {
         const NOMINAL_KAS = 5000;
-        const [pemasukanRow] = await db.query(`
+        const [pemasukanRow] = await db.execute(`
             SELECT 
                 SUM(minggu_ke_1 + minggu_ke_2 + minggu_ke_3 + minggu_ke_4) as total_centang 
             FROM kas_kelas
@@ -13,16 +13,16 @@ export async function GET() {
         const totalCentang = pemasukanRow[0].total_centang || 0;
         const totalMasuk = totalCentang * NOMINAL_KAS;
 
-        const [pengeluaranRow] = await db.query(`
+        const [pengeluaranRow] = await db.execute(`
             SELECT SUM(nominal) as total_keluar 
             FROM rekap_kas
-            WHERE tipe = 'keluar'
+            WHERE tipe = 'Keluar'
         `);
         const totalKeluar = pengeluaranRow[0].total_keluar || 0;
 
-        const [listKeluar] = await db.query(`
+        const [listKeluar] = await db.execute(`
             SELECT * FROM rekap_kas 
-            WHERE tipe = 'keluar' 
+            WHERE tipe = 'Keluar' 
             ORDER BY tanggal DESC
         `);
 
@@ -41,7 +41,7 @@ export async function GET() {
 export async function POST(req) {
     try {
         const { nominal, keterangan, tipe, tanggal } = await req.json();
-        await db.query(
+        await db.execute(
             'INSERT INTO rekap_kas (nominal, keterangan, tipe, tanggal) VALUES (?, ?, ?, ?)',
             [nominal, keterangan, tipe, tanggal]
         );
@@ -56,7 +56,7 @@ export async function DELETE(request) {
         const { id } = await request.json();
         
         // Query untuk menghapus data berdasarkan ID
-        await db.query('DELETE FROM rekap_kas WHERE id = ?', [id]);
+        await db.execute('DELETE FROM rekap_kas WHERE id = ?', [id]);
         
         return NextResponse.json({ message: "Data berhasil dihapus" });
     } catch (error) {

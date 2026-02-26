@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try {
         // Default ke Januari 2026
-        const [rows] = await db.query(
+        const [rows] = await db.execute(
             'SELECT * FROM kas_kelas WHERE bulan = ? AND tahun = ?', 
             ['Januari', 2026]
         );
@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request){
     try{
         const { bulan, tahun } = await request.json();
-        const [rows] = await db.query(
+        const [rows] = await db.execute(
             'SELECT * FROM kas_kelas WHERE bulan = ? AND tahun = ?', 
             [bulan, tahun]
         );

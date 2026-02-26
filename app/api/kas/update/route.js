@@ -6,7 +6,7 @@ export async function POST(req) {
         const { id, minggu, status } = await req.json()
         const columnName = `minggu_ke_${minggu}`
 
-        await db.query(
+        await db.execute(
             `UPDATE kas_kelas SET ${columnName} = ? WHERE id = ?`, 
             [status, id]
         )

@@ -4,7 +4,7 @@ import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
 export default function SideNav({active}) {
-    function Tab({ src, isi, id, href, className }) {
+    function Tab({ src, isi, id, href }) {
         const isActive = active === id
         return (
             <a

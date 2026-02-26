@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 export async function GET(request, { params }) {
     const { uuid } = await params;
     
-    const [rows] = await db.query('SELECT * FROM siswa WHERE uuid = ?', [uuid]);
+    const [rows] = await db.execute('SELECT * FROM siswa WHERE uuid = ?', [uuid]);
 
     if (rows.length > 0){
         const siswa = rows[0]

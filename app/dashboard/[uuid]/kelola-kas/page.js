@@ -163,6 +163,15 @@ function Home({ nama, jabatan, className, src, instagram}){
             await fetchDataTotalKas();
         }
     };
+    const grandTotal = dataKas.reduce((acc, item) => {
+    const totalPerSiswa = (
+        (Number(item.minggu_ke_1) || 0) + 
+        (Number(item.minggu_ke_2) || 0) + 
+        (Number(item.minggu_ke_3) || 0) + 
+        (Number(item.minggu_ke_4) || 0)
+    ) * 5000;
+    return acc + totalPerSiswa;
+    }, 0);
     return(
         <div className="grid gap-3 md:gap-3 grid-cols-12 transition-all mt-14 md:mt-0">
             <div className={`bg-white rounded-2xl col-span-12 lg:col-span-7 p-5 w-full min-w-0 shadow-md ${className}`}>
@@ -282,7 +291,7 @@ function Home({ nama, jabatan, className, src, instagram}){
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 2</p>
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 3</p>
                         <p className="col-span-1 text-center font-medium text-[#39343d]">Minggu 4</p>
-                        <p className="col-span-4 text-center font-medium text-[#433d47]">Ketereangan</p>
+                        <p className="col-span-4 text-center font-medium text-[#433d47]">Total</p>
                     </div>
                     {dataKas.map((item) => (
                         <div key={item.id} className={`grid grid-cols-12 gap-4 w-4xl lg:w-full text-xs md:text-sm items-center px-5 py-2 border-b-2 border-l-2 border-r-2 border-[#d6bbcf]`}>
@@ -292,25 +301,27 @@ function Home({ nama, jabatan, className, src, instagram}){
                                 <select 
                                     value={item.minggu_ke_1 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 1, e.target.value)}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_1 
                                             ? " text-white" 
                                             : ""
-                                        }`}
+                                        } ${role === "Bendahara" ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
                                 >
                                     <option value="1">Lunas</option>
                                     <option value="0">X</option>
                                 </select>
                             </p>
-                            <p className="col-span-1 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
+                            <p className={`col-span-1 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full`}>
                                 <select 
                                     value={item.minggu_ke_2 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 2, e.target.value)}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_2 
                                             ? " text-white" 
                                             : ""
-                                        }`}
+                                        } ${role === "Bendahara" ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
                                 >
                                     <option value="1">Lunas</option>
                                     <option value="0">X</option>
@@ -320,11 +331,12 @@ function Home({ nama, jabatan, className, src, instagram}){
                                 <select 
                                     value={item.minggu_ke_3 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 3, e.target.value)}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_3 
                                             ? " text-white" 
                                             : ""
-                                        }`}
+                                        } ${role === "Bendahara" ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
                                 >
                                     <option value="1">Lunas</option>
                                     <option value="0">X</option>
@@ -334,19 +346,29 @@ function Home({ nama, jabatan, className, src, instagram}){
                                 <select 
                                     value={item.minggu_ke_4 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 4, e.target.value)}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_4 
                                             ? " text-white" 
                                             : ""
-                                        }`}
+                                        } ${role === "Bendahara" ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
                                 >
                                     <option value="1">Lunas</option>
                                     <option value="0">X</option>
                                 </select>
                             </p>
-                            <p className="col-span-4 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">{item.minggu_ke_1 === 1 && item.minggu_ke_2 === 1 && item.minggu_ke_3 === 1 && item.minggu_ke_4 === 1 ? "Lunas Semua" : "Belum Lunas"}</p>
+                            <p className="col-span-4 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
+                                Rp {(((item.minggu_ke_1 || 0) + (item.minggu_ke_2 || 0) + (item.minggu_ke_3 || 0) + (item.minggu_ke_4 || 0)) * 5000).toLocaleString()}
+                            </p>
                         </div>
                     ))}
+                    <div className="grid grid-cols-12 gap-4 w-4xl lg:w-full text-xs md:text-sm items-center px-5 py-2 border-b-2 border-l-2 border-r-2 border-[#d6bbcf]">
+                        <p className="col-span-2"></p>
+                        <p className="col-span-6 font-bold text-text">Total Kas Bulan Ini :</p>
+                        <p className="col-span-4 text-center font-extrabold text-[#8B60FF]">
+                            Rp {grandTotal.toLocaleString('id-ID')}
+                        </p>
+                    </div>
                 </div>
             </div>
             )}

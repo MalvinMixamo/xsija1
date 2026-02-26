@@ -51,7 +51,7 @@ export default function Login(){
                 height={100}></Image>
             <h3 className="text-2xl text-gray-600 font-bold my-5">Sign in to your SIJA Account</h3>
             <form onSubmit={handelSubmit} className="bg-white px-8 py-10 flex flex-col text-gray-500 rounded-2xl">
-                <label htmlFor="nisn">Nisn</label>
+                <label htmlFor="nisn">Nis</label>
                 <input 
                     name="nisn"
                     type="text" 

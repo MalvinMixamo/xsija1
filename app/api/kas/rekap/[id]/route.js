@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export async function DELETE(req, { params }) {
     try {
         const { id } = params;
-        await db.query('DELETE FROM kas_transaksi WHERE id = ?', [id]);
+        await db.execute('DELETE FROM kas_transaksi WHERE id = ?', [id]);
         return NextResponse.json({ message: "Berhasil dihapus" });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -17,7 +17,7 @@ export async function PUT(req, { params }) {
     try {
         const { id } = params;
         const { nominal, keterangan, tipe, tanggal } = await req.json();
-        await db.query(
+        await db.execute(
             'UPDATE kas_transaksi SET nominal=?, keterangan=?, tipe=?, tanggal=? WHERE id=?',
             [nominal, keterangan, tipe, tanggal, id]
         );

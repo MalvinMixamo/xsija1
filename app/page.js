@@ -1,8 +1,11 @@
+'use client'
 import Image from "next/image"
 import Link from "next/link"
+import { NextResponse } from "next/server"
+import { useEffect } from "react"
 function Navbar(){
     function SubNav({isi}){
-        return <Link href={"ror"} className="text-gray-700 font-bold text-3xl hover:text-[#8B80FF] transition-colors ease-in-out">{isi}</Link>
+        return <Link href={"ror"} className="text-gray-700 font-bold text-3xl hover:text-[#8B80FF] hover:scale-110 transition-all duration-200 ease-in-out">{isi}</Link>
     }
     return (
         <div className="bg-[#DDD9FF] w-full fixed py-5 px-10 flex flex-row items-center justify-between">
@@ -31,17 +34,42 @@ export default function LandingPage(){
             </ul>
         )
     }
+    const dataSiswa = async(e) => {
+        try{
+            const response = await fetch('/api/siswa', {
+                method: 'GET', 
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+            })
+            const data = await response.json()
+            console.log(data)
+            if (!data) {
+                console.warn("Cannot connect server");
+            }
+
+        }catch(err){
+            
+        }
+    }
+    useEffect(()=> {dataSiswa()}, [])
     return (
         <div className="flex flex-col gap-2">
             <Navbar />
-            <div className="flex flex-row justify-between mt-32 px-5">
-                <div className="flex flex-col gap-2.5">
-                    <h1 className="font-bold text-gray-700 text-5xl">Selamat datang di kelas <span className="text-[#8B80FF]">X SIJA 1</span></h1>
-                    <div className="flex flex-row gap-2.5 items-center">
+            <div className="flex flex-row mt-32 px-5 w-full justify-center">
+                <div className="flex flex-col gap-2.5 justify-center">
+                    <h1 className="font-bold text-gray-700 text-5xl text-center">Selamat datang di kelas <span className="text-[#8B80FF]">X SIJA 1</span></h1>
+                    <div className="flex flex-row gap-2.5 items-center justify-center">
                         <h1 className="text-gray-700 text-4xl">Kelas Paling</h1>
                         <RotatingText />
                     </div>
+                    <div className="w-full flex justify-center">
+                        <p className="w-1/2 text-center text-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, sapiente dolor. Possimus cumque molestiae, tempora, perferendis itaque fuga ipsa consequuntur quisquam natus commodi, est optio? Dignissimos qui amet impedit harum nulla aliquid. Delectus adipisci dicta repudiandae culpa et, quo ipsum quam, distinctio, rem deserunt exercitationem!</p>
+                    </div>
+                    
                 </div>
+                
             </div>
         </div>
     )

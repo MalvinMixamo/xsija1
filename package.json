@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.90.1",
     "js-cookie": "^3.0.5",
     "mysql2": "^3.16.0",
     "net": "^1.0.2",
@@ -16,6 +17,7 @@
     "next-auth": "^4.24.13",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "supabase": "^2.72.8",
     "tls": "^0.0.1"
   },
   "devDependencies": {
