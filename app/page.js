@@ -4,8 +4,8 @@ import Link from "next/link"
 import { NextResponse } from "next/server"
 import { useEffect } from "react"
 function Navbar(){
-    function SubNav({isi}){
-        return <Link href={"ror"} className="text-gray-700 font-bold text-3xl hover:text-[#8B80FF] hover:scale-110 transition-all duration-200 ease-in-out">{isi}</Link>
+    function SubNav({isi, to}){
+        return <Link href={to} className="text-gray-700 font-bold text-3xl hover:text-[#8B80FF] hover:scale-110 transition-all duration-200 ease-in-out">{isi}</Link>
     }
     return (
         <div className="bg-[#DDD9FF] w-full fixed py-5 px-10 flex flex-row items-center justify-between">
@@ -15,9 +15,10 @@ function Navbar(){
                 height={90}
                 className="h-auto saturate-0 brightness-25"/>
             <div className="flex flex-row items-center gap-5">
-                <SubNav isi={"Tentang Kelas"}/>
-                <SubNav isi={"Jadwal Pelajaran"}/>
-                <SubNav isi={"Ayo Kenalan"}/>
+                <SubNav isi={"Tentang Kelas"} to={''}/>
+                <SubNav isi={"Jadwal Pelajaran"} to={''}/>
+                <SubNav isi={"Ayo Kenalan"} to={''}/>
+                <Link href="/login" className="py-2 px-10 bg-[#8B80FF] rounded-full text-2xl shadow-md text-gray-50 font-bold">Login</Link>
             </div>
         </div>
     )

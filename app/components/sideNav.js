@@ -81,12 +81,6 @@ export default function SideNav({active}) {
                 {(role?.toLowerCase() === 'bendahara' || role?.toLowerCase() === 'developer') && (
                     <>
                         <Tab 
-                            href={`/dashboard/${uuid}/anggota-kelas`}
-                            id="anggota-kelas"
-                            src="/favicon.ico" 
-                            isi="Anggota Kelas" 
-                            textStyle="text-white" />
-                        <Tab 
                             href={`/dashboard/${uuid}/kelola-kas`}
                             id="kelola-kas"
                             src="/kelola-kas.png" 
@@ -109,6 +103,12 @@ export default function SideNav({active}) {
                 />
                 {role?.toLocaleLowerCase() === "developer" && (
                     <>
+                        <Tab 
+                            href={`/dashboard/${uuid}/anggota-kelas`}
+                            id="anggota-kelas"
+                            src="/favicon.ico" 
+                            isi="Anggota Kelas" 
+                            textStyle="text-white" />
                         <Tab 
                             href={`/dashboard/${uuid}/c3yr2ghie4t73r8`}
                             src={'/developer.png'}

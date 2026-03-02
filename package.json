@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.575.0",
     "mysql2": "^3.16.0",
     "net": "^1.0.2",
     "next": "^16.1.0-canary.34",

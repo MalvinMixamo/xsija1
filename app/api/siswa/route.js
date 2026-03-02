@@ -47,7 +47,7 @@ export async function GET() {
         if(data.length === 0){
             return NextResponse.json({message: 'ada yang salah sama querynya bray(function GET api/siswa'}, {status: 500})
         }
-        return NextResponse.json(data[0])
+        return NextResponse.json(data)
     }catch(err){
         return NextResponse.json({message: 'gagal mendapatkan database', err}, {status: 501})
     }

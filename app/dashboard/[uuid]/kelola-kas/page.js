@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useRef, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import LoadingPage from "@/app/components/loading"
 
 function Home({ nama, jabatan, className, src, instagram}){
     //Semua Variabel Disini Bray
@@ -197,12 +198,11 @@ function Home({ nama, jabatan, className, src, instagram}){
                         <div className="flex gap-3.5 flex-row items-center"> {/* Tambahkan items-center di sini juga */}
                             <Image 
                                 alt="profil"
-                                src={src === "" || src === null ? "/globe.svg" : src}
+                                src={src === "" || src === null ? "/globe.svg" : `/uploads/${src}`}
                                 width={50}
                                 height={50}
                                 unoptimized={src?.startsWith('data:')}
-                                className="h-15 w-15 hrink-0 overflow-hidden rounded-full object-cover border border-gray-200" 
-                            />
+                                className="h-15 w-15 hrink-0 overflow-hidden rounded-full object-cover border border-gray-200" />
                             {/* TAMBAHKAN justify-center DI SINI */}
                             <div className="flex flex-col justify-center min-w-0">
                                 <p className="font-medium text-sm md:text-lg text-gray-600 leading-tight">{nama}</p>
@@ -402,7 +402,9 @@ export default function HomePage() {
     }, [uuid, router]);
 
     if (loading) {
-        return <div className="flex h-screen items-center justify-center">Memuat data...</div>;
+        return(
+            <LoadingPage />
+        )
     }
 
     if (!dataSiswa) {
