@@ -180,7 +180,7 @@ export default function ProfileCard({src, jabatan, nama, instagram, loading, cla
                     <div className="flex gap-3.5 flex-row items-center"> {/* Tambahkan items-center di sini juga */}
                         <Image 
                             alt="profil"
-                            src={src === "" || src === null ? "/globe.svg" : `${src}`}
+                            src={src === "" || src === null ? "/globe.svg" : `/uploads/${src}`}
                             width={50}
                             height={50}
                             unoptimized={src?.startsWith('data:')}

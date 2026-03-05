@@ -6,6 +6,7 @@ import { useParams } from "next/navigation"
 import { useRef, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import LoadingPage from "@/app/components/loading"
+import ProfileCard from "@/app/components/profileCard"
 
 function Home({ nama, jabatan, className, src, instagram}){
     //Semua Variabel Disini Bray
@@ -154,7 +155,11 @@ function Home({ nama, jabatan, className, src, instagram}){
         const res = await fetch('/api/kas/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, minggu, status: parseInt(newStatus) })
+            body: JSON.stringify({ 
+                id, 
+                minggu, 
+                status: parseInt(newStatus) 
+            })
         });
 
         if (res.ok) {
@@ -164,6 +169,29 @@ function Home({ nama, jabatan, className, src, instagram}){
             await fetchDataTotalKas();
         }
     };
+    const handleStatusChangeMaster = async (id, newStatus) => {
+    const daftarMinggu = [1, 2, 3, 4];
+    
+    // Menjalankan 4 request sekaligus
+    const promises = daftarMinggu.map(minggu => 
+        fetch('/api/kas/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, minggu, status: parseInt(newStatus) })
+        })
+    );
+
+    try {
+        await Promise.all(promises);
+        
+        // Setelah semua selesai, baru refresh data
+        const bulanAktifSekarang = bulans.find(b => b.id === buttonAktif)?.bulan || "Januari";
+        await fetchData(bulanAktifSekarang); 
+        await fetchDataTotalKas();
+    } catch (error) {
+        console.error("Gagal update semua minggu:", error);
+    }
+};
     const grandTotal = dataKas.reduce((acc, item) => {
     const totalPerSiswa = (
         (Number(item.minggu_ke_1) || 0) + 
@@ -175,52 +203,12 @@ function Home({ nama, jabatan, className, src, instagram}){
     }, 0);
     return(
         <div className="grid gap-3 md:gap-3 grid-cols-12 transition-all mt-14 md:mt-0">
-            <div className={`bg-white rounded-2xl col-span-12 lg:col-span-7 p-5 w-full min-w-0 shadow-md ${className}`}>
-                <div className="flex flex-col gap-2.5">
-                    <div className="pl-1 flex flex-row items-center gap-5">
-                        <p className="text-gray-500 font-bold text-lg md:text-xl">Account</p>
-                        <div className="flex flex-row gap-2.5 bg-[#8B80FF] text-white border-2 border-[#9e4beb] py-1 px-3 rounded-lg text-sm items-center font-bold">
-                            <Image 
-                                alt="jabatan"
-                                src={`/${ 
-                                    jabatan === "Bendahara" ? "bendahara.png" : 
-                                    jabatan === "Developer" ? "developer.png" : 
-                                    jabatan === "Bot Engineer" ? "bot.png" : 
-                                    "siswa1.png" 
-                                }`}
-                                width={28} 
-                                height={20}
-                                className="w-5 h-auto md:w-7"/>
-                            <p className="md:text-sm text-xs">{jabatan}</p>
-                        </div>    
-                    </div>
-                    <div className="flex flex-row justify-between items-center bg-purple-50 px-3 py-5 rounded-full">
-                        <div className="flex gap-3.5 flex-row items-center"> {/* Tambahkan items-center di sini juga */}
-                            <Image 
-                                alt="profil"
-                                src={src === "" || src === null ? "/globe.svg" : `/uploads/${src}`}
-                                width={50}
-                                height={50}
-                                unoptimized={src?.startsWith('data:')}
-                                className="h-15 w-15 hrink-0 overflow-hidden rounded-full object-cover border border-gray-200" />
-                            {/* TAMBAHKAN justify-center DI SINI */}
-                            <div className="flex flex-col justify-center min-w-0">
-                                <p className="font-medium text-sm md:text-lg text-gray-600 leading-tight">{nama}</p>
-                                <Link 
-                                    target="_blank" 
-                                    className="truncate max-w-48 md:max-w-full min-w-0 block text-[#6f5ffd] text-xs md:text-base leading-tight" 
-                                    href={instagram}
-                                >
-                                    {instagram}
-                                </Link>
-                            </div>
-                        </div>
-                        <button className="rounded-full shrink-0 bg-white border-background border-2 w-12 h-12">
-                            {/* Button kosongan */}
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <ProfileCard
+                src={src}
+                jabatan={jabatan}
+                nama={nama}
+                instagram={instagram}
+            />
             {(role?.toLowerCase() === 'bendahara' || role?.toLowerCase() === 'developer') && (
                 <div className={`bg-[url(/background-kas.png)] bg-size-[100%_100%] bg-no-repeat rounded-2xl col-span-12 lg:col-span-5 p-5 w-full shadow-md ${className}`}>
                     <div className="flex gap-2 justify-between items-center select-none">
@@ -291,7 +279,8 @@ function Home({ nama, jabatan, className, src, instagram}){
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 2</p>
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 3</p>
                         <p className="col-span-1 text-center font-medium text-[#39343d]">Minggu 4</p>
-                        <p className="col-span-4 text-center font-medium text-[#433d47]">Total</p>
+                        <p className="col-span-1 text-center font-medium text-[#39343d]">Lunas Semua</p>
+                        <p className="col-span-3 text-center font-medium text-[#433d47]">Total</p>
                     </div>
                     {dataKas.map((item) => (
                         <div key={item.id} className={`grid grid-cols-12 gap-4 w-4xl lg:w-full text-xs md:text-sm items-center px-5 py-2 border-b-2 border-l-2 border-r-2 border-[#d6bbcf]`}>
@@ -346,7 +335,7 @@ function Home({ nama, jabatan, className, src, instagram}){
                                 <select 
                                     value={item.minggu_ke_4 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 4, e.target.value)}
-                                    disabled={role !== "Bendahara"}
+                                    disabled={role !== "Developer"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_4 
                                             ? " text-white" 
@@ -357,7 +346,22 @@ function Home({ nama, jabatan, className, src, instagram}){
                                     <option value="0">X</option>
                                 </select>
                             </p>
-                            <p className="col-span-4 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
+                            <p className="col-span-1 text-center font-bold text-white bg-[#8B80FF] px-2 py-1 rounded-full">
+                                <select 
+                                    value={(item.minggu_ke_1 && item.minggu_ke_2 && item.minggu_ke_3 && item.minggu_ke_4) ? "1" : "0"}
+                                    onChange={(e) => handleStatusChangeMaster(item.id, e.target.value)}
+                                    disabled={role !== "Developer"}
+                                    className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
+                                        ${item.minggu_ke_4 
+                                            ? " text-white" 
+                                            : ""
+                                        } ${role === "Bendahara" ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
+                                >
+                                    <option value="1">Lunas</option>
+                                    <option value="0">X</option>
+                                </select>
+                            </p>
+                            <p className="col-span-3 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
                                 Rp {(((item.minggu_ke_1 || 0) + (item.minggu_ke_2 || 0) + (item.minggu_ke_3 || 0) + (item.minggu_ke_4 || 0)) * 5000).toLocaleString()}
                             </p>
                         </div>

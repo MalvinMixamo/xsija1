@@ -16,7 +16,7 @@ export default function Loading(){
                 >
                     <div className="flex flex-row gap-2.5 items-center border-b-2 border-purple-100 py-2.5 justify-center">
                         <div className="h-10 w-10 rounded-md bg-purple-100/50 animate-pulse"></div>
-                        <div className="w-32 h-3 bg-purple-100/50 rounded-full animate-pulse"></div>
+                        <h1 className="font-bold text-2xl text-white">SIJA 1</h1>
                     </div>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
                         <div key={id} className="h-10 w-full bg-purple-100/50 rounded-2xl animate-pulse"></div>
@@ -28,7 +28,7 @@ export default function Loading(){
                         <div className={`bg-white rounded-2xl col-span-12 lg:col-span-7 p-5 w-full min-w-0 shadow-md`}>
                             <div className="flex flex-col gap-2.5">
                                 <div className="pl-1 flex flex-row items-center gap-5">
-                                    <div className="bg-gray-300 rounded-full font-bold text-lg md:text-xl w-20 h-6 animate-pulse"></div>
+                                    <div className="text-gray-500 rounded-full font-bold text-lg md:text-xl">Account</div>
                                     <div className="flex flex-row gap-2.5 bg-gray-300 w-24 h-6 text-white border-2 py-1 px-3 rounded-lg text-sm items-center font-bold animate-pulse"></div>    
                                 </div>
                                 <div className="flex flex-row justify-between items-center bg-gray-50 px-3 py-5 rounded-full animate-pulse">
@@ -44,6 +44,9 @@ export default function Loading(){
                                     <div className="bg-gray-200 rounded-full h-16 w-16 text-center px-3 animate-pulse"></div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="bg-[#8B88FF] rounded-2xl col-span-12 lg:col-span-5 p-5 w-full min-w-o shadow-md">
+
                         </div>
                     </div>
                 </div>

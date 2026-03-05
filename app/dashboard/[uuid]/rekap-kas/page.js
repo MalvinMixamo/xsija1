@@ -76,12 +76,14 @@ export default function RekapKas() {
             <main className="w-full flex-1 p-8 mt-10 md:mt-0">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-500">Rekap Kas</h1>
-                    <button 
+                    {role?.toLowerCase() == 'bendahara' && (
+                        <button 
                         onClick={() => setShowModal(true)}
                         className="bg-[#8B80FF] hover:bg-[#7a6fff] hover:cursor-pointer text-white px-4 py-2 rounded-lg font-bold transition-all shadow-md"
                     >
                         + Tambah Pengeluaran
-                    </button>
+                    </button>  
+                    )}
                 </div>
 
                 {/* Ringkasan Saldo */}
