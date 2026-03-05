@@ -279,8 +279,8 @@ function Home({ nama, jabatan, className, src, instagram}){
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 2</p>
                         <p className="col-span-1 text-center font-medium text-[#433d47]">Minggu 3</p>
                         <p className="col-span-1 text-center font-medium text-[#39343d]">Minggu 4</p>
-                        <p className="col-span-1 text-center font-medium text-[#39343d]">Lunas Semua</p>
-                        <p className="col-span-3 text-center font-medium text-[#433d47]">Total</p>
+                        <p className="col-span-2 text-center font-medium text-[#39343d]">Lunas Semua</p>
+                        <p className="col-span-2 text-center font-medium text-[#433d47]">Total</p>
                     </div>
                     {dataKas.map((item) => (
                         <div key={item.id} className={`grid grid-cols-12 gap-4 w-4xl lg:w-full text-xs md:text-sm items-center px-5 py-2 border-b-2 border-l-2 border-r-2 border-[#d6bbcf]`}>
@@ -335,7 +335,7 @@ function Home({ nama, jabatan, className, src, instagram}){
                                 <select 
                                     value={item.minggu_ke_4 ? "1" : "0"}
                                     onChange={(e) => handleStatusChange(item.id, 4, e.target.value)}
-                                    disabled={role !== "Developer"}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_4 
                                             ? " text-white" 
@@ -346,11 +346,11 @@ function Home({ nama, jabatan, className, src, instagram}){
                                     <option value="0">X</option>
                                 </select>
                             </p>
-                            <p className="col-span-1 text-center font-bold text-white bg-[#8B80FF] px-2 py-1 rounded-full">
+                            <p className="col-span-2 text-center font-bold text-white bg-[#8B80FF] px-2 py-1 rounded-full">
                                 <select 
                                     value={(item.minggu_ke_1 && item.minggu_ke_2 && item.minggu_ke_3 && item.minggu_ke_4) ? "1" : "0"}
                                     onChange={(e) => handleStatusChangeMaster(item.id, e.target.value)}
-                                    disabled={role !== "Developer"}
+                                    disabled={role !== "Bendahara"}
                                     className={`text-center cursor-pointer appearance-none outline-none transition-all bg-none
                                         ${item.minggu_ke_4 
                                             ? " text-white" 
@@ -361,7 +361,7 @@ function Home({ nama, jabatan, className, src, instagram}){
                                     <option value="0">X</option>
                                 </select>
                             </p>
-                            <p className="col-span-3 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
+                            <p className="col-span-2 text-center font-bold text-white bg-[#8B60FF] px-2 py-1 rounded-full">
                                 Rp {(((item.minggu_ke_1 || 0) + (item.minggu_ke_2 || 0) + (item.minggu_ke_3 || 0) + (item.minggu_ke_4 || 0)) * 5000).toLocaleString()}
                             </p>
                         </div>
