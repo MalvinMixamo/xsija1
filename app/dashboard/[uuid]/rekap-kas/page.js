@@ -3,11 +3,111 @@ import { useState, useEffect } from "react"
 import SideNav from "@/app/components/sideNav"
 import { useParams } from "next/navigation"
 
+export function ModalEdit({data, isOpen, onClose, onRefresh}){
+    const formattedDate = new Date(data.tanggal).toLocaleDateString('en-CA');
+    const [formData, setFormData] = useState({
+        tipe: "",
+        nominal: "",
+        nama_barang: "",
+        keterangan: "",
+        tanggal: ""
+    })
+
+    useEffect(() => {
+        if(data) {
+            setFormData({
+                tipe: data.tipe || "",
+                nominal: data.nominal || "",
+                nama_barang: data.nama_barang || "",
+                keterangan: data.keterangan || "",
+                tanggal: formattedDate || ""
+            })
+        }
+    }, [data])
+
+    if(!isOpen) return null
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value})
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+        const res = await fetch(`/api/kas/rekap/${data.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+
+        if (res.ok) {
+            alert("Data berhasil diupdate bray!");
+            onRefresh()
+            onClose()
+        } else {
+            alert("Gagal update data!");
+        }
+        } catch (err) {
+        console.error(err);
+        }
+    };
+    console.log(formData)
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div className="bg-[#8B80FF] border border-purple-700 w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-purple-700 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-white">Edit Profil</h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+        <label className="text-xs font-semibold text-white uppercase">Nama Barang</label>
+            <input name="nama_barang" value={formData.nama_barang} onChange={handleChange} className="w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-white focus:border-yellow-500 outline-none transition" required />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-white uppercase">Keterangan</label>
+            <div className=" bg-[#655cc9] border border-white p-2.5 rounded-lg text-white focus:border-yellow-500 outline-none transition flex justify-between">
+                <input name="keterangan" value={formData.keterangan} onChange={handleChange} className="w-100% focus:outline-0" />
+            </div>
+          </div>
+
+          <div className="md:col-span-2 space-y-1">
+            <label className="text-xs font-semibold text-white uppercase">Nominal</label>
+            <input name="nominal" value={formData.nominal} onChange={handleChange} rows="3" readOnly disabled title="Jangan diubah NIS nya, bentrok nanti!" className="cursor-not-allowed w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-gray-400 focus:border-yellow-500 outline-none transition" />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-white uppercase">Tanggal</label>
+            <input name="tanggal" type="date" value={formData.tanggal} onChange={handleChange} className="w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-white focus:border-yellow-500 outline-none transition select-none" />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-white uppercase">Tipe</label>
+            <input name="tipe" type="text" disabled readOnly value={formData.tipe} onChange={handleChange} className="w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-white focus:border-yellow-500 outline-none transition" />
+          </div>
+          <div className="md:col-span-2 mt-6 flex justify-end gap-3">
+            <button type="button" onClick={onClose} className="px-5 py-2 text-white hover:text-yellow-500 cursor-pointer font-medium transition">
+              Batal
+            </button>
+            <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer font-bold px-8 py-2 rounded-lg transition-transform active:scale-95">
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    )
+}
+
 export default function RekapKas() {
     const [rekap, setRekap] = useState({ data: [], summary: { totalMasuk: 0, totalKeluar: 0, saldo: 0 } })
     const [showModal, setShowModal] = useState(false)
     const [formData, setFormData] = useState({ keterangan: '', nominal: '', tanggal: '' })
     const [role, setRole] = useState('')
+    const [pengeluaran, setPengeluaran] = useState(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
     useEffect(() => {
         const getCookie = (name) => {
             if (typeof document !== "undefined") {
@@ -24,7 +124,7 @@ export default function RekapKas() {
     }, []);
 
     const fetchData = async () => {
-        const res = await fetch('../../../api/kas/rekap')
+        const res = await fetch('/api/kas/rekap')
         const data = await res.json()
         setRekap(data)
     }
@@ -69,6 +169,22 @@ export default function RekapKas() {
     const formatRupiah = (angka) => {
         return new Intl.NumberFormat('id-ID').format(angka)
     }
+    const openEditModal = async (id) => {
+        try{
+            setIsModalOpen(true)
+            const res = await fetch(`/api/kas/rekap/${id}`)
+            if (!res.ok) throw new Error("Gagal mengambil data")
+
+            const data = await res.json()
+            setPengeluaran(data)
+        }catch(err){
+            console.error("Error:", err);
+            alert("Gagal memuat data edit!");
+            setIsModalOpen(false);
+        }
+    }
+    //debug
+    console.log(rekap)
     return (
         <div className="flex min-h-screen bg-background overflow-hidden">
             <SideNav active="rekap-kas" />
@@ -108,16 +224,19 @@ export default function RekapKas() {
                         <thead className="bg-[#8B88FF]">
                             <tr>
                                 <th className="p-4">Tanggal</th>
+                                <th className="p-4">Nama Barang</th>
                                 <th className="p-4">Keterangan</th>
                                 <th className="p-4">Tipe</th>
                                 <th className="p-4">Nominal</th>
-                                    <th className="p-4"></th>
+                                <th className="p-4"></th>
+                                <th className="p-4"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {rekap.data.map((item) => (
                                 <tr key={item.id} className="border-b hover:bg-gray-50">
                                     <td className="p-4 text-sm text-gray-500">{new Date(item.tanggal).toLocaleDateString('id-ID')}</td>
+                                    <td className="p-4 font-medium text-gray-600">{item.nama_barang}</td>
                                     <td className="p-4 font-medium text-gray-600">{item.keterangan}</td>
                                     <td className="p-4">
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${item.tipe === 'masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -127,8 +246,11 @@ export default function RekapKas() {
                                     <td className={`p-4 font-bold ${item.tipe === 'masuk' ? 'text-green-600' : 'text-red-600'}`}>
                                         {item.tipe === 'masuk' ? '+' : '-'} Rp {item.nominal.toLocaleString()}
                                     </td>
-                                    {role?.toLowerCase() == "bendahara" && (
-                                        <td className="p-4"><button className="bg-red-100 text-red-600 hover:cursor-pointer hover:bg-red-300 py-3 px-4 rounded" onClick={() => handleDeleteRekap(item.id)}>Delete</button></td>   
+                                    {role?.toLowerCase() == "developer" && (
+                                        <td className="p-2"><button className="bg-green-100 text-green-600 hover:cursor-pointer hover:bg-green-300 py-3 px-4 rounded" onClick={() => openEditModal(item.id)}>Edit</button></td>
+                                    )}
+                                    {role?.toLowerCase() == "developer" && (
+                                        <td className="p-2"><button className="bg-red-100 text-red-600 hover:cursor-pointer hover:bg-red-300 py-3 px-4 rounded" onClick={() => handleDeleteRekap(item.id)}>Delete</button></td>
                                     )}
                                     </tr>
                             ))}
@@ -183,6 +305,15 @@ export default function RekapKas() {
                         </form>
                     </div>
                 </div>
+            )}
+
+            {pengeluaran && (
+                <ModalEdit 
+                    isOpen={isModalOpen} 
+                    onClose={() => setIsModalOpen(false)} 
+                    data={pengeluaran}
+                    onRefresh={fetchData}
+                />
             )}
         </div>
     );

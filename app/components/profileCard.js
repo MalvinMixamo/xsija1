@@ -150,7 +150,6 @@ export default function ProfileCard({src, jabatan, nama, instagram, loading, cla
         const res = await fetch(`/api/siswa/${uuid}`)
         const data = await res.json()
         setProfil(data)
-        // setLoading(false)
     }
     console.log(profil)
     useEffect(() => {fetchProfil()}, [])
