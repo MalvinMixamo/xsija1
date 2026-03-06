@@ -74,7 +74,7 @@ export function ModalEdit({data, isOpen, onClose, onRefresh}){
 
           <div className="md:col-span-2 space-y-1">
             <label className="text-xs font-semibold text-white uppercase">Nominal</label>
-            <input name="nominal" value={formData.nominal} onChange={handleChange} rows="3" readOnly disabled title="Jangan diubah NIS nya, bentrok nanti!" className="cursor-not-allowed w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-gray-400 focus:border-yellow-500 outline-none transition" />
+            <input name="nominal" value={formData.nominal} onChange={handleChange} rows="3" className=" w-full bg-[#655cc9] border border-white p-2.5 rounded-lg text-white focus:border-yellow-500 outline-none transition" />
           </div>
 
           <div className="space-y-1">
