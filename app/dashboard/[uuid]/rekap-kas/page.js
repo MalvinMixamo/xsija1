@@ -228,8 +228,12 @@ export default function RekapKas() {
                                 <th className="p-4">Keterangan</th>
                                 <th className="p-4">Tipe</th>
                                 <th className="p-4">Nominal</th>
-                                <th className="p-4"></th>
-                                <th className="p-4"></th>
+                                {role?.toLowerCase() == "bendahara" && (
+                                    <th className="p-4"></th>
+                                )}
+                                {role?.toLowerCase() == "bendahara" && (
+                                    <th className="p-4"></th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,10 +250,10 @@ export default function RekapKas() {
                                     <td className={`p-4 font-bold ${item.tipe === 'masuk' ? 'text-green-600' : 'text-red-600'}`}>
                                         {item.tipe === 'masuk' ? '+' : '-'} Rp {item.nominal.toLocaleString()}
                                     </td>
-                                    {role?.toLowerCase() == "developer" && (
+                                    {role?.toLowerCase() == "bendahara" && (
                                         <td className="p-2"><button className="bg-green-100 text-green-600 hover:cursor-pointer hover:bg-green-300 py-3 px-4 rounded" onClick={() => openEditModal(item.id)}>Edit</button></td>
                                     )}
-                                    {role?.toLowerCase() == "developer" && (
+                                    {role?.toLowerCase() == "bendahara" && (
                                         <td className="p-2"><button className="bg-red-100 text-red-600 hover:cursor-pointer hover:bg-red-300 py-3 px-4 rounded" onClick={() => handleDeleteRekap(item.id)}>Delete</button></td>
                                     )}
                                     </tr>
