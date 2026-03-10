@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from "react"
+import Image from "next/image"
+import SideNav from "./sideNav"
 
 export default function Loading(){
     const [open, setOpen] = useState(false)
@@ -15,7 +17,7 @@ export default function Loading(){
                     `}
                 >
                     <div className="flex flex-row gap-2.5 items-center border-b-2 border-purple-100 py-2.5 justify-center">
-                        <div className="h-10 w-10 rounded-md bg-purple-100/50 animate-pulse"></div>
+                        <Image alt="logo" src="/logo.png" width={42} height={32} />
                         <h1 className="font-bold text-2xl text-white">SIJA 1</h1>
                     </div>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (

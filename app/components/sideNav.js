@@ -1,9 +1,11 @@
 'use client'
 import Image from "next/image"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { NextResponse } from "next/server"
 import { useState, useEffect } from "react"
 
 export default function SideNav({active}) {
+    const router = useRouter()
     function Tab({ src, isi, id, href }) {
         const isActive = active === id
         return (
@@ -35,6 +37,22 @@ export default function SideNav({active}) {
         console.log("Role di SideNav:", userRole);
         setRole(userRole);
     }, []);
+
+    const handleLogout = async () => {
+        
+        if(confirm('Yakin mau logout bray?')){
+            try{
+                const res = await fetch('/api/auth/logout', {
+                    method: 'POST'
+                })
+                if(res.ok){
+                    router.push('/')
+                }
+            }catch(error){
+                return NextResponse.json({message: "Error saat fetch logout"}, {status: 500})
+            }
+        }
+    }
     return (
         <>
             {/* HAMBURGER BUTTON */}
@@ -69,53 +87,55 @@ export default function SideNav({active}) {
                     <Image alt="logo" src="/logo.png" width={42} height={32} />
                     <h1 className="font-bold text-2xl text-white">SIJA 1</h1>
                 </div>
-
-                <Tab
-                    href={`/dashboard/${uuid}`}
-                    id="home"
-                    textStyle="text-black"
-                    src="/dashboard.png"
-                    isi="Home"
-                    className={`${active === "home" ? "brightness-0" : "brightness-100"}`}
-                />
-                {(role?.toLowerCase() === 'bendahara' || role?.toLowerCase() === 'developer') && (
-                    <>
-                        <Tab 
-                            href={`/dashboard/${uuid}/kelola-kas`}
-                            id="kelola-kas"
-                            src="/kelola-kas.png" 
-                            isi="Kelola Kas" 
-                            textStyle="text-white" />
-                        <Tab 
-                            href={`/dashboard/${uuid}/rekap-kas`}
-                            id="rekap-kas"
-                            src="/rekap-kas.png" 
-                            isi="Rekap Kas" 
-                            textStyle="text-white" />
-                    </>
-                )}
-                <Tab
-                    href={`/dashboard/${uuid}/notifikasi`}
-                    id="notifikasi"
-                    textStyle="text-black"
-                    src="/notifikasi.png"
-                    isi="notifikasi"
-                />
-                {role?.toLocaleLowerCase() === "developer" && (
-                    <>
-                        <Tab 
-                            href={`/dashboard/${uuid}/anggota-kelas`}
-                            id="anggota-kelas"
-                            src="/favicon.ico" 
-                            isi="Anggota Kelas" 
-                            textStyle="text-white" />
-                        <Tab 
-                            href={`/dashboard/${uuid}/c3yr2ghie4t73r8`}
-                            src={'/developer.png'}
-                            isi="Maintenance"
-                            textStyle="text-white"/>
-                    </>
-                )}
+                <div className="flex flex-col">
+                    <Tab
+                        href={`/dashboard/${uuid}`}
+                        id="home"
+                        textStyle="text-black"
+                        src="/dashboard.png"
+                        isi="Home"
+                        className={`${active === "home" ? "brightness-0" : "brightness-100"}`}
+                    />
+                    {(role?.toLowerCase() === 'bendahara' || role?.toLowerCase() === 'developer') && (
+                        <>
+                            <Tab 
+                                href={`/dashboard/${uuid}/kelola-kas`}
+                                id="kelola-kas"
+                                src="/kelola-kas.png" 
+                                isi="Kelola Kas" 
+                                textStyle="text-white" />
+                            <Tab 
+                                href={`/dashboard/${uuid}/rekap-kas`}
+                                id="rekap-kas"
+                                src="/rekap-kas.png" 
+                                isi="Rekap Kas" 
+                                textStyle="text-white" />
+                        </>
+                    )}
+                    <Tab
+                        href={`/dashboard/${uuid}/notifikasi`}
+                        id="notifikasi"
+                        textStyle="text-black"
+                        src="/notifikasi.png"
+                        isi="notifikasi"
+                    />
+                    {role?.toLocaleLowerCase() === "developer" && (
+                        <>
+                            <Tab 
+                                href={`/dashboard/${uuid}/anggota-kelas`}
+                                id="anggota-kelas"
+                                src="/favicon.ico" 
+                                isi="Anggota Kelas" 
+                                textStyle="text-white" />
+                            <Tab 
+                                href={`/dashboard/${uuid}/c3yr2ghie4t73r8`}
+                                src={'/developer.png'}
+                                isi="Maintenance"
+                                textStyle="text-white"/>
+                        </>
+                    )}
+                </div>
+                <button className="border-t border-white relative cursor-pointer font-bold py-2 mt-auto" onClick={handleLogout}>Logout</button>
             </aside>
         </>
     )
