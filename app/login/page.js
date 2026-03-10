@@ -2,12 +2,15 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import LoadingPage from "../components/loading"
 
 export default function Login(){
     const[nisn, setNisn] = useState('')
     const[password, setPassword] = useState('')
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
     const handelSubmit = async(e) => {
+        setLoading(true)
         e.preventDefault();
         const data = { nisn, password }
 
@@ -23,7 +26,6 @@ export default function Login(){
             if (!response.ok) { 
                 alert(result.message || 'responsenya ga oke ni bray');
             } else {
-                alert('Welcome ' + result.user.nama);
                 setNisn('');
                 setPassword('');
                 router.push(`/dashboard/${result.user.uuid}`); 
@@ -41,6 +43,10 @@ export default function Login(){
         }else{
             setShowPassword('password')
         }
+    }
+
+    if(loading){
+        return <LoadingPage />
     }
     return(
         <div className="bg-[url(/background-login.png)] bg-center bg-no-repeat bg-size-[100%_100%] flex gap-5 justify-start py-24 items-center w-full h-screen flex-col">
